@@ -1,6 +1,10 @@
 <template>
   <div>
     <h1>Todo Lists</h1>
+
+    <input type="text" v-model="todo" class="form-control" autofocus="true">
+    <button @click="addTodo()" class="btn btn-primary" :disabled="!todo.length">Add Todo</button>
+
     <table>
       <thead>
         <tr>
@@ -23,6 +27,7 @@
 export default {
   data: function () {
     return {
+      todo: '',
       list: [
         { id: 1, item: "Foo" },
         { id: 2, item: "Bar" }
@@ -35,6 +40,12 @@ export default {
   },
 
   methods: {
+    addTodo(){
+      this.$http.post('todolists.json', { item: this.todo }, {})
+      .then((res) => this.fetchTodoLists(), this.todo = '')
+      .catch((error) => console.log('Got a problem' + error));
+    },
+
     fetchTodoLists: function() {
        const resource = this.$resource('/todolists.json/{ id }');
        resource.get().then(function(response){

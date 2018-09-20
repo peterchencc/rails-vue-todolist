@@ -28,6 +28,19 @@ export default {
         { id: 2, item: "Bar" }
       ]
     }
+  },
+
+  created: function() {
+   this.fetchTodoLists();
+  },
+
+  methods: {
+    fetchTodoLists: function() {
+       const resource = this.$resource('/todolists.json/{ id }');
+       resource.get().then(function(response){
+         this.list = response.data
+       });
+    }
   }
 }
 </script>
